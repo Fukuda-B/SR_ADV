@@ -12,6 +12,7 @@ from torch import nn, optim
 from torch.utils.data import TensorDataset, DataLoader
 from torchvision import models
 # import matplotlib.pyplot as plt
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class PairImage(ImageFolder):
     def __init__(self, root, transform = None, large_size = 256, small_size = 64, **kwds):
