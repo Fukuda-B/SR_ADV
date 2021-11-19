@@ -48,7 +48,7 @@ class ResidualBlock(nn.Module):
 class Generator(nn.Module):
     def __init__(self):
         super(Generator, self).__init__()
-        self.conv1 = nn.COnv2d(3, 64, kernel_size = 9, padding = 4)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size = 9, padding = 4)
         self.relu = nn.PReLU()
 
         self.residualLayer = nn.Sequential(
