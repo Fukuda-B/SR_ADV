@@ -1,6 +1,3 @@
-# ESRGANでDIV2Kデータを学習させる
-# DIV2Kの教師データ数は800、検証データ数は100
-
 #
 # https://qiita.com/pacifinapacific/items/ec338a500015ae8c33fe
 # https://qiita.com/AokiMasataka/items/bfb5e338079f01bfc996
