@@ -76,7 +76,7 @@ def main():
             config.LEARNING_RATE,
         )
         load_checkpoint(
-           config.CHECKPOINT_DISC, disc, opt_disc, config.LEARNING_RATE,
+            config.CHECKPOINT_DISC, disc, opt_disc, config.LEARNING_RATE,
         )
 
     for epoch in range(config.NUM_EPOCHS):
