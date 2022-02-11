@@ -22,6 +22,7 @@ settings = {
     'load_img_format' : 'png',
     'save_img_format' : 'jpg',
 }
+np.random.seed(seed=settings['seed'])
 
 # -----
 def random_crop(image_p, crop_size):
@@ -32,8 +33,8 @@ def random_crop(image_p, crop_size):
     # print(type(image_p))
     image = cv2.imread(image_p)
     h, w, c = image.shape
-    if (h < crop_size[0] or w < crop_size[1]):
-        raise Exception('image is smaller then the crop size')
+    # if (h < crop_size[0] or w < crop_size[1]):
+    #     raise Exception('image is smaller then the crop size')
     pos_top = np.random.randint(0, h-crop_size[0])
     pos_left = np.random.randint(0, h-crop_size[1])
     res = image[pos_top:pos_top+crop_size[0], pos_left:pos_left+crop_size[1]]
@@ -55,8 +56,7 @@ def run_crop(settings):
             except Exception as e:
                 continue
             save_name = f"{cc}.{settings['save_img_format']}"
-            s_path = save_path.joinpath(save_name)
-            s_path = str(s_path)
+            s_path = str(save_path.joinpath(save_name))
             cv2.imwrite(s_path, proc_img)
             cc += 1
 
