@@ -33,10 +33,10 @@ def random_crop(image_p, crop_size):
     # print(type(image_p))
     image = cv2.imread(image_p)
     h, w, c = image.shape
-    # if (h < crop_size[0] or w < crop_size[1]):
-    #     raise Exception('image is smaller then the crop size')
+    if (h < crop_size[0] or w < crop_size[1]):
+        raise Exception('image is smaller then the crop size')
     pos_top = np.random.randint(0, h-crop_size[0])
-    pos_left = np.random.randint(0, h-crop_size[1])
+    pos_left = np.random.randint(0, w-crop_size[1])
     res = image[pos_top:pos_top+crop_size[0], pos_left:pos_left+crop_size[1]]
     return res
 
