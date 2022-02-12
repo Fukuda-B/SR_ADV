@@ -1,11 +1,6 @@
 # SRGAN
 
 '''
-    メモ
-    非線形な活性化関数 f(x)=tanh(x), f(x)=(1+e^-x)-1が利用されていたが、ReLUを利用することで学習を高速化できる
-    勾配消失問題(学習は予測値と実際の値の茣蓙を最小にする過程で進が、活性化関数の勾配がゼロに近づくことで学習が進まなくなる)
-
------
     https://arxiv.org/abs/1609.04802, https://arxiv.org/pdf/1609.04802.pdf - original SRGAN
     https://qiita.com/yu4u/items/7e93c454c9410c4b5427#relu
     https://kotobank.jp/word/%E5%8B%BE%E9%85%8D%E6%B6%88%E5%A4%B1%E5%95%8F%E9%A1%8C-2132547

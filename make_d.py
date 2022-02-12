@@ -11,8 +11,9 @@ from pathlib import Path
 from tqdm import tqdm
 
 # ----- config
-from set_e import settings
-np.random.seed(seed=settings['seed'])
+import set_e
+settings = set_e.Settings()
+np.random.seed(seed=settings.seed)
 
 # ----- main
 def random_crop(image_p, crop_size):
@@ -31,21 +32,18 @@ def random_crop(image_p, crop_size):
     return res
 
 def run_crop(settings):
-    '''
-        settings        : {settings}
-    '''
-    load_path = Path(settings['image_dir_load'])
-    save_path = Path(settings['image_dir_save'])
-    img_f = list(load_path.glob('*.'+settings['load_img_format']))
+    load_path = Path(settings.image_dir_load)
+    save_path = Path(settings.image_dir_save)
+    img_f = list(load_path.glob('*.'+settings.load_img_format))
     cc = 0
     for i in tqdm(img_f):
         i = str(i)
-        for j in range(settings['random_crop_cnt']):
+        for j in range(settings.random_crop_cnt):
             try:
-                proc_img = random_crop(i, settings['crop_size'])
+                proc_img = random_crop(i, settings.crop_size)
             except Exception as e:
                 continue
-            save_name = f"{cc}.{settings['save_img_format']}"
+            save_name = f"{cc}.{settings.save_img_format}"
             s_path = str(save_path.joinpath(save_name))
             cv2.imwrite(s_path, proc_img)
             cc += 1

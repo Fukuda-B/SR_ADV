@@ -2,64 +2,25 @@
     SR_ADV | sr_adv.py
 '''
 
-# ----- module
-import glob
-from pathlib import Path
-from cv2 import mean, transform
-from torchvision import transforms
-from torch.utils.data import Dataset
-from PIL import Image
+# ---- module
+import torch
 
 # ----- config
-from set_e import settings
+import set_e
+settings = set_e.Settings()
 
-# ----- data load
-class ImageDataset(Dataset):
-    def __init__(self, dataset_dir, hr_shape):
-        hr_height, hr_width = hr_shape
+# ----- main
+Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
+with torch.no_grad():
+    for i, imgs in enumerate(demo_dataloader):
+        imgs_lr = Variable(imgs['lr'].type(Tensor))
 
-        self.lr_transform = transforms.Compose([
-            transforms.Resize((hr_height // 4, hr_height // 4), Image.BICUBIC),
-            transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
+        gen_hr = generator(imgs_lr)
+        imgs_lr = nn.functional.interpolate(imgs_lr, scale_factor=4)
 
-        self.hr_transform = transforms.Compose([
-            transforms.Resize((hr_height, hr_height), Image.BICUBIC),
-            transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
+        imgs_lr = denormalize(imgs_lr)
+        gen_hr = denormalize(gen_hr)
+        os.mkdirs(settings.image_dir_demo, exist_ok=True)
 
-        self.files = sorted(glob(Path(settings['image_dir_save']).joinpath('*')))
-
-    def __getitem__(self, index):
-        img = Image.open(self.files[index%len(self.files)])
-        img_lr = self.lr_transform(img)
-        img_hr = self.hr_transform(img)
-        return {'lr': img_lr, 'hr': img_hr}
-
-    def __len__(self): return len(self.files)
-
-class TestImageDataset(Dataset):
-    def __init__(self, dataset_dir):
-        self.hr_transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
-        self.files = sorted(glob(Path(settings['image_dir_save']).joinpath('*')))
-
-    def lr_transform(self, img, img_size):
-        img_width, img_height = img_size
-
-        self.__lr_transform = transforms.Compose([
-            transforms.Resize((img_height // 4, img_width // 4), Image.BICUBIC),
-            transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
-        img = self.__lr_transform(img)
-        return img
-
-    def __getitem__(self, index):
-        img = Image.open(self.files[index%len(self.files)])
-        img_size = img.size
-        img_lr = self.lr_transform(img, img_size)
-        img_hr = self.hr_transform(img)
-        return {'lr': img_lr, 'hr': img_hr}
-
-    def __len__(self): return len(self.files)
+        save_image(imgs_lr, Path(settings.image_dir_demo).joinpath('low_{:01}.{}'.format(i, settings.demo_img_format), nrow=1, normalize=False))
+        save_image(imgs_hr, Path(settings.image_dir_demo).joinpath('gen_hr_{:01}.{}'.format(i, settings.demo_img_format), nrow=1, normalize=False))
