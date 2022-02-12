@@ -13,7 +13,8 @@ from torch.utils.data import Dataset
 from PIL import Image
 
 # ----- config
-from set_e import settings
+import set_e
+settings = set_e.Settings()
 
 # ----- data load
 class ImageDataset(Dataset):

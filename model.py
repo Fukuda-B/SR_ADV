@@ -12,6 +12,7 @@ from torch import optim
 from torchvision.models import vgg19
 from torch.utils.tensorboard import SummaryWriter
 from pathlib import Path
+from chainer import Variable
 
 # ----- config
 import set_e
@@ -56,7 +57,7 @@ class ResidualInResidualDenseBlock(nn.Module):
         return self.dense_blocks(x).mul(self.res_scale) + x
 
 class GeneratorRRDB(nn.Module):
-    def __init__(self, channels, filters=64, num_res_block=16, num_upsample=2):
+    def __init__(self, channels, filters=64, num_res_blocks=16, num_upsample=2):
         super(GeneratorRRDB, self).__init__()
 
         self.conv1 = nn.Conv2d(channels, filters, kernel_size=3, stride=1, padding=1)
@@ -113,7 +114,7 @@ class Discriminator(nn.Module):
         patch_h, patch_w = int(in_height/2**4), int(in_width/2**4)
         self.output_shape = (1, patch_h, patch_w)
 
-        def descriminator_block(in_filters, out_filters, first_block=False):
+        def discriminator_block(in_filters, out_filters, first_block=False):
             layers = []
             layers.append(nn.Conv2d(in_filters, out_filters, kernel_size=3, stride=1, padding=1))
             if not first_block:
@@ -130,9 +131,9 @@ class Discriminator(nn.Module):
             print(discriminator_block(in_filters, out_filters, first_block=(i==0)))
         layers.extend(discriminator_block(in_filters, out_filters, first_block=(i==0)))
         in_filters = out_filters
-    
-    layers.append(nn.Conv2d(out_filters, 1, kernel_size=3, stride=1, padding=1))
-    self.model = nn.Sequential(*layers)
+        
+        layers.append(nn.Conv2d(out_filters, 1, kernel_size=3, stride=1, padding=1))
+        self.model = nn.Sequential(*layers)
 
     def forward(self, img):
         return self.model(img)
@@ -142,7 +143,7 @@ class ESRGAN():
     def __init__(self, opt):
         self.generator = GeneratorRRDB(
             opt.channels, filters=64,
-            num_res_block=opt.residual_blocks).to(opt.device)
+            num_res_blocks=opt.residual_blocks).to(opt.device)
         self.discriminator = Discriminator(
             input_shape=(opt.channels, *hr_shape)).to(opt.device)
         
@@ -204,7 +205,7 @@ class ESRGAN():
         # perceptual loss
         gen_feature = self.feature_extractor(gen_hr)
         real_feature = self.feature_extractor(imgs_hr).detach()
-        loss_content = eslf.criterion_content(gen_feature, real_feature)
+        loss_content = self.criterion_content(gen_feature, real_feature)
 
         # generator loss
         loss_G = loss_content+opt.lambda_adv*loss_GAN+opt.lambda_adv*loss_pixel
