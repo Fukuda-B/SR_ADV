@@ -3,28 +3,18 @@
 
     make random crop data
 '''
-import os
-import re
-import glob
+
+# ----- module
 import cv2
 import numpy as np
 from pathlib import Path
-from matplotlib import image
 from tqdm import tqdm
 
-# -----
-settings = {
-    'image_dir_load' : 'G:/IMG_Dataset/all',
-    'image_dir_save' : 'G:/IMG_Dataset/crop',
-    'seed' : 1011,
-    'random_crop_cnt' : 8, # Number of times to crop from a single image
-    'crop_size' : (128, 128),
-    'load_img_format' : 'png',
-    'save_img_format' : 'jpg',
-}
+# ----- config
+from set_e import settings
 np.random.seed(seed=settings['seed'])
 
-# -----
+# ----- main
 def random_crop(image_p, crop_size):
     '''
         image           : np.array
