@@ -9,7 +9,10 @@ import torch
 import train_set
 import model
 
-# ---- config
+# ----- config
+import set_e
+settings = set_e.Settings()
+
 class Param:
     def __init__(self):
         self.n_epoch = 50
@@ -35,6 +38,9 @@ class Param:
 if __name__ == '__main__':
     opt = Param()
     gan = model.ESRGAN(opt)
+    train_dataloader = train_set.ImageDataset(settings.image_dir_save, opt.hr_shape)
+    test_dataloader = train_set.TestImageDataset(settings.image_dir_test)
+
     for epoch in range(1, opt.n_epoch+1):
         for batch_num, imgs in enumerate(train_dataloader):
             batches_done=(epoch-1)*len(train_dataloader)+batch_num

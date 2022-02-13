@@ -24,14 +24,18 @@ class ImageDataset(Dataset):
         self.lr_transform = transforms.Compose([
             transforms.Resize((hr_height // 4, hr_height // 4), Image.BICUBIC),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
+            # transforms.Normalize(mean, std),
+            ])
 
         self.hr_transform = transforms.Compose([
             transforms.Resize((hr_height, hr_height), Image.BICUBIC),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
+            # transforms.Normalize(mean, std),
+            ])
 
-        self.files = sorted(glob(Path(settings['image_dir_save']).joinpath('*')))
+        p = Path(settings.image_dir_save)
+        self.files = sorted(p.glob('*.'+settings.save_img_format))
+        # print(self.files)
 
     def __getitem__(self, index):
         img = Image.open(self.files[index%len(self.files)])
@@ -45,8 +49,11 @@ class TestImageDataset(Dataset):
     def __init__(self, dataset_dir):
         self.hr_transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
-        self.files = sorted(glob(Path(settings['image_dir_save']).joinpath('*')))
+            # transforms.Normalize(mean, std),
+            ])
+        p = Path(dataset_dir)
+        self.files = sorted(p.glob('*'))
+        # self.files = sorted(glob(Path(dataset_dir).joinpath('*')))
 
     def lr_transform(self, img, img_size):
         img_width, img_height = img_size
@@ -54,7 +61,8 @@ class TestImageDataset(Dataset):
         self.__lr_transform = transforms.Compose([
             transforms.Resize((img_height // 4, img_width // 4), Image.BICUBIC),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std)])
+            # transforms.Normalize(mean, std),
+            ])
         img = self.__lr_transform(img)
         return img
 
@@ -66,3 +74,9 @@ class TestImageDataset(Dataset):
         return {'lr': img_lr, 'hr': img_hr}
 
     def __len__(self): return len(self.files)
+
+# ----- test
+if __name__ == '__main__':
+    train_dataloader = ImageDataset(settings.image_dir_save, (128, 128))
+    img = train_dataloader[0]
+    print(img['lr'])
