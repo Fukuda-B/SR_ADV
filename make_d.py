@@ -5,6 +5,7 @@
 '''
 
 # ----- module
+import os
 import cv2
 import numpy as np
 from pathlib import Path
@@ -32,6 +33,7 @@ def random_crop(image_p, crop_size):
     return res
 
 def run_crop(settings):
+    os.makedirs(settings.image_dir_save, exist_ok=True)
     load_path = Path(settings.image_dir_load)
     save_path = Path(settings.image_dir_save)
     img_f = list(load_path.glob('*.'+settings.load_img_format))

@@ -26,7 +26,7 @@ class DenseResidualBlock(nn.Module):
 
         def block(in_features, non_linearity=True):
             layers = [nn.Conv2d(in_features, filters, 3, 1, 1, bias=True)]
-            if non_linearity: layers += [nn.LeakyReLU]
+            if non_linearity: layers += [nn.LeakyReLU()]
             return nn.Sequential(*layers)
 
         self.b1 = block(in_features=1 * filters)

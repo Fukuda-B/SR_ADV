@@ -4,6 +4,11 @@
 
 # ---- module
 import torch
+from chainer import Variable
+from pathlib import Path
+#
+import model
+save_image = model.ESRGAN().save_image
 
 # ----- config
 import set_e

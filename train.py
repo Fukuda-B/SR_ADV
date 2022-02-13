@@ -5,6 +5,7 @@
 '''
 
 # ----- module
+import torch
 import train_set
 import model
 
@@ -26,6 +27,7 @@ class Param:
         self.b2 = 0.999
         self.lambda_adv = 5.00E-03
         self.lambda_pixel = 1.00E-02
+        self.device = 'cuda' if torch.cuda.is_available else 'cpu'
 
 # ----- main
 if __name__ == '__main__':
