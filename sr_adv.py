@@ -3,9 +3,11 @@
 '''
 
 # ---- module
+import os
 import torch
 from chainer import Variable
 from pathlib import Path
+from torch import nn
 #
 import model
 save_image = model.ESRGAN().save_image
@@ -28,4 +30,4 @@ with torch.no_grad():
         os.mkdirs(settings.image_dir_demo, exist_ok=True)
 
         save_image(imgs_lr, Path(settings.image_dir_demo).joinpath('low_{:01}.{}'.format(i, settings.demo_img_format), nrow=1, normalize=False))
-        save_image(imgs_hr, Path(settings.image_dir_demo).joinpath('gen_hr_{:01}.{}'.format(i, settings.demo_img_format), nrow=1, normalize=False))
+        save_image(gen_hr, Path(settings.image_dir_demo).joinpath('gen_hr_{:01}.{}'.format(i, settings.demo_img_format), nrow=1, normalize=False))

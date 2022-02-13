@@ -119,10 +119,10 @@ class Discriminator(nn.Module):
             layers.append(nn.Conv2d(in_filters, out_filters, kernel_size=3, stride=1, padding=1))
             if not first_block:
                 layers.append(nn.BatchNorm2d(out_filters))
-            layers.append(nn.LearkyReLU(0.2, inplace=True))
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
             layers.append(nn.Conv2d(out_filters, out_filters, kernel_size=3, stride=2, padding=1))
             layers.append(nn.BatchNorm2d(out_filters))
-            layers.append(nn.LearkyReLU(0.2, inplace=True))
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
             return layers
 
         layers = []
@@ -131,7 +131,7 @@ class Discriminator(nn.Module):
             print(discriminator_block(in_filters, out_filters, first_block=(i==0)))
         layers.extend(discriminator_block(in_filters, out_filters, first_block=(i==0)))
         in_filters = out_filters
-        
+
         layers.append(nn.Conv2d(out_filters, 1, kernel_size=3, stride=1, padding=1))
         self.model = nn.Sequential(*layers)
 
@@ -145,7 +145,8 @@ class ESRGAN():
             opt.channels, filters=64,
             num_res_blocks=opt.residual_blocks).to(opt.device)
         self.discriminator = Discriminator(
-            input_shape=(opt.channels, *hr_shape)).to(opt.device)
+            # input_shape=(opt.channels, *hr_shape)).to(opt.device)
+            input_shape=(opt.channels, *opt.hr_shape)).to(opt.device)
         
         self.feature_extractor = FeatureExtractor().to(opt.device)
         self.feature_extractor.eval()
@@ -156,7 +157,7 @@ class ESRGAN():
         self.optimizer_G = optim.Adam(self.generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
         self.optimizer_D = optim.Adam(self.discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
         self.Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-        self.writer = SummaryWriter(log_dir=log_dir)
+        self.writer = SummaryWriter(log_dir=opt.log_dir)
 
     def pre_train(self, imgs, batches_done):
         '''
@@ -255,7 +256,7 @@ class ESRGAN():
 
             image_batch_save_dir = Path(settings.image_dir_test).joinpath('{:05}'.format(i))
             os.makedirs(settings.image_dir_test, exist_ok=True)
-            save_image(gen_hr, Path(settings.image_dir_test, '{:09}.{}'.format(batches_done, settings.test_img_format)), nrow=1, normalize=False)
+            save_image(gen_hr, Path(image_batch_save_dir, '{:09}.{}'.format(batches_done, settings.test_img_format)), nrow=1, normalize=False)
 
     def save_weight(self, batches_done):
         generator_weight_path = Path(settings.weight_dir_save).joinpath('generator_{:08}.pth'.format(batches_done))
