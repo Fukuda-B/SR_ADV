@@ -247,7 +247,7 @@ class ESRGAN():
     def save_loss(self, train_info, batches_done):
         for k, v in train_info.items():
             self.writer.add_scalar(k, v, batches_done)
-    
+
     def save_image(self, imgs, batches_done):
         with torch.no_grad():
             gen_hr = self.generator(imgs_lr)
