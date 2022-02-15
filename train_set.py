@@ -5,9 +5,7 @@
 '''
 
 # ----- module
-import glob
 from pathlib import Path
-from cv2 import mean, transform
 from torchvision import transforms
 from torch.utils.data import Dataset
 from PIL import Image
@@ -24,13 +22,13 @@ class ImageDataset(Dataset):
         self.lr_transform = transforms.Compose([
             transforms.Resize((hr_height // 4, hr_height // 4), Image.BICUBIC),
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std),
+            transforms.Normalize(settings.mean, settings.std),
             ])
 
         self.hr_transform = transforms.Compose([
             transforms.Resize((hr_height, hr_height), Image.BICUBIC),
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std),
+            transforms.Normalize(settings.mean, settings.std),
             ])
 
         p = Path(settings.image_dir_save)
@@ -49,7 +47,7 @@ class TestImageDataset(Dataset):
     def __init__(self, dataset_dir):
         self.hr_transform = transforms.Compose([
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std),
+            transforms.Normalize(settings.mean, settings.std),
             ])
         p = Path(dataset_dir)
         self.files = sorted(p.glob('*'))
@@ -61,7 +59,7 @@ class TestImageDataset(Dataset):
         self.__lr_transform = transforms.Compose([
             transforms.Resize((img_height // 4, img_width // 4), Image.BICUBIC),
             transforms.ToTensor(),
-            # transforms.Normalize(mean, std),
+            transforms.Normalize(settings.mean, settings.std),
             ])
         img = self.__lr_transform(img)
         return img

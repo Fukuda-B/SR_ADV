@@ -12,8 +12,8 @@ from torch import optim
 from torchvision.models import vgg19
 from torch.utils.tensorboard import SummaryWriter
 from pathlib import Path
-import tensorflow
-from tensorflow import Variable
+from torch.autograd import Variable
+from torchvision.utils import save_image
 
 # ----- config
 import set_e
@@ -140,7 +140,7 @@ class Discriminator(nn.Module):
         return self.model(img)
 
 # -----
-class ESRGAN():
+class MODEL():
     def __init__(self, opt):
         self.generator = GeneratorRRDB(
             opt.channels, filters=64,
@@ -148,7 +148,7 @@ class ESRGAN():
         self.discriminator = Discriminator(
             # input_shape=(opt.channels, *hr_shape)).to(opt.device)
             input_shape=(opt.channels, *opt.hr_shape)).to(opt.device)
-        
+
         self.feature_extractor = FeatureExtractor().to(opt.device)
         self.feature_extractor.eval()
         self.criterion_GAN = nn.BCEWithLogitsLoss().to(opt.device)

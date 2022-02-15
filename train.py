@@ -2,10 +2,17 @@
     SR_ADV | train.py
 
     train
+
+-----
+    memo
+
+    https://discuss.pytorch.org/t/mean-and-std-values-for-transforms-normalize/70458
+    https://stackoverflow.com/questions/58151507/why-pytorch-officially-use-mean-0-485-0-456-0-406-and-std-0-229-0-224-0-2
 '''
 
 # ----- module
 import torch
+import numpy as np
 import train_set
 import model
 
@@ -33,11 +40,13 @@ class Param:
         self.lambda_pixel = 1.00E-02
         self.device = 'cuda' if torch.cuda.is_available else 'cpu'
         self.log_dir = 'G:/IMG_Dataset/logs'
+        self.mean = np.array([0.485, 0.456, 0.406])
+        self.std = np.array([0.229, 0.224, 0.225])
 
 # ----- main
 if __name__ == '__main__':
     opt = Param()
-    gan = model.ESRGAN(opt)
+    gan = model.MODEL(opt)
     train_dataloader = train_set.ImageDataset(settings.image_dir_save, opt.hr_shape)
     test_dataloader = train_set.TestImageDataset(settings.image_dir_test)
 

@@ -5,7 +5,7 @@
 # ---- module
 import os
 import torch
-from chainer import Variable
+from torch.autograd import Variable
 from pathlib import Path
 from torch import nn
 #
