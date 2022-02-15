@@ -12,7 +12,8 @@ from torch import optim
 from torchvision.models import vgg19
 from torch.utils.tensorboard import SummaryWriter
 from pathlib import Path
-from chainer import Variable
+import tensorflow
+from tensorflow import Variable
 
 # ----- config
 import set_e
