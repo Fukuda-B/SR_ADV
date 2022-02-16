@@ -21,4 +21,6 @@ class Settings:
         self.image_dir_demo = 'G:/IMG_Dataset/demo'
         self.test_img_format = 'jpg'
         self.demo_img_format = 'png'
+        self.image_dir_proc = 'G:/IMG_Dataset/proc'
         self.weight_dir_save =  'G:/IMG_Dataset/weight'
+        self.log_dir = 'G:/IMG_Dataset/logs'

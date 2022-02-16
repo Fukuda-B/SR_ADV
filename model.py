@@ -41,7 +41,7 @@ class DenseResidualBlock(nn.Module):
         inputs = x
         for block in self.blocks:
             out = block(inputs)
-            inputs = torch.cat([inputs, out, 1])
+            inputs = torch.cat([inputs, out], 1)
         return out.mul(self.res_scale) + x
 
 class ResidualInResidualDenseBlock(nn.Module):
@@ -158,9 +158,9 @@ class MODEL():
         self.optimizer_G = optim.Adam(self.generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
         self.optimizer_D = optim.Adam(self.discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
         self.Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
-        self.writer = SummaryWriter(log_dir=opt.log_dir)
+        self.writer = SummaryWriter(log_dir=settings.log_dir)
 
-    def pre_train(self, imgs, batches_done):
+    def pre_train(self, imgs, batches_done, epoch, batch_num):
         '''
             only use pixel loss
         '''
@@ -184,7 +184,7 @@ class MODEL():
         sys.stdout.write('\r {}'.format(train_info))
         self.save_loss(train_info, batches_done)
 
-    def train(self, imgs, batches_done):
+    def train(self, imgs, batches_done, epoch, batch_num, opt):
         imgs_lr = Variable(imgs['lr'].type(self.Tensor))
         imgs_hr = Variable(imgs['hr'].type(self.Tensor))
 
@@ -245,19 +245,25 @@ class MODEL():
 
         self.save_loss(train_info, batches_done)
 
+    def denormalize(self, t, opt):
+        for i in range(3):
+            t[:, i].mul_(opt.std[i]).add_(opt.mean[i])
+        return torch.clamp(t, 0, 255)
+
     def save_loss(self, train_info, batches_done):
         for k, v in train_info.items():
             self.writer.add_scalar(k, v, batches_done)
 
-    def save_image(self, imgs, batches_done):
+    def save_image(self, imgs, batches_done, i, opt):
         with torch.no_grad():
+            imgs_lr = Variable(imgs['lr'].type(self.Tensor))
             gen_hr = self.generator(imgs_lr)
-            gen_hr = self.denormalize(gen_hr)
+            gen_hr = self.denormalize(gen_hr, opt)
             self.writer.add_image('image_{}'.format(i), gen_hr[0], batches_done)
 
-            image_batch_save_dir = Path(settings.image_dir_test).joinpath('{:05}'.format(i))
-            os.makedirs(settings.image_dir_test, exist_ok=True)
-            save_image(gen_hr, Path(image_batch_save_dir, '{:09}.{}'.format(batches_done, settings.test_img_format)), nrow=1, normalize=False)
+            image_batch_proc_dir = Path(settings.image_dir_proc).joinpath('{:05}'.format(i))
+            os.makedirs(image_batch_proc_dir, exist_ok=True)
+            save_image(gen_hr, Path(image_batch_proc_dir, '{:09}.{}'.format(batches_done, settings.test_img_format)), nrow=1, normalize=False)
 
     def save_weight(self, batches_done):
         generator_weight_path = Path(settings.weight_dir_save).joinpath('generator_{:08}.pth'.format(batches_done))

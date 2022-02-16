@@ -15,6 +15,7 @@ import torch
 import numpy as np
 import train_set
 import model
+from torch.utils.data import DataLoader
 
 # ----- config
 import set_e
@@ -27,7 +28,7 @@ class Param:
         self.warmup_batches = 500
         self.sample_interval = 100
         self.checkpoint_interval = 1000
-        self.n_cpu = 8
+        self.num_workers = 8
         self.hr_height = 128
         self.hr_width = 128
         self.hr_shape = (self.hr_height, self.hr_width)
@@ -39,7 +40,6 @@ class Param:
         self.lambda_adv = 5.00E-03
         self.lambda_pixel = 1.00E-02
         self.device = 'cuda' if torch.cuda.is_available else 'cpu'
-        self.log_dir = 'G:/IMG_Dataset/logs'
         self.mean = np.array([0.485, 0.456, 0.406])
         self.std = np.array([0.229, 0.224, 0.225])
 
@@ -47,22 +47,39 @@ class Param:
 if __name__ == '__main__':
     opt = Param()
     gan = model.MODEL(opt)
-    train_dataloader = train_set.ImageDataset(settings.image_dir_save, opt.hr_shape)
-    test_dataloader = train_set.TestImageDataset(settings.image_dir_test)
+    train_dataloader = DataLoader(
+        train_set.ImageDataset(
+            settings.image_dir_save,
+            opt.hr_shape,
+            num_workers=opt.num_workers,
+        ),
+        batch_size=opt.batch_size,
+        shuffle=True,
+        num_workers=opt.n_cpu,
+    )
+    test_dataloader = DataLoader(
+        train_set.TestImageDataset(
+            settings.image_dir_test,
+            num_workers=opt.num_workers,
+        ),
+        batch_size=1,
+        shuffle=False,
+        num_workers=opt.n_cpu,
+    )
 
     for epoch in range(1, opt.n_epoch+1):
         for batch_num, imgs in enumerate(train_dataloader):
             batches_done=(epoch-1)*len(train_dataloader)+batch_num
 
             if batches_done <= opt.warmup_batches:
-                gan.pre_train(imgs, batches_done) # pre train
+                gan.pre_train(imgs, batches_done, epoch, batch_num) # pre train
             else:
-                gan.train(imgs, batches_done) # train
+                gan.train(imgs, batches_done, epoch, batch_num, opt) # train
 
             # save sample
             if batches_done%opt.sample_interval==0:
                 for i, imgs in enumerate(test_dataloader):
-                    gan.save_image(imgs, batches_done)
+                    gan.save_image(imgs, batches_done, i, opt)
 
             # save weight
             if batches_done%opt.checkpoint_interval==0:

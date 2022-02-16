@@ -13,6 +13,8 @@ from PIL import Image
 # ----- config
 import set_e
 settings = set_e.Settings()
+import train
+opt = train.Param()
 
 # ----- data load
 class ImageDataset(Dataset):
@@ -22,13 +24,13 @@ class ImageDataset(Dataset):
         self.lr_transform = transforms.Compose([
             transforms.Resize((hr_height // 4, hr_height // 4), Image.BICUBIC),
             transforms.ToTensor(),
-            transforms.Normalize(settings.mean, settings.std),
+            transforms.Normalize(opt.mean, opt.std),
             ])
 
         self.hr_transform = transforms.Compose([
             transforms.Resize((hr_height, hr_height), Image.BICUBIC),
             transforms.ToTensor(),
-            transforms.Normalize(settings.mean, settings.std),
+            transforms.Normalize(opt.mean, opt.std),
             ])
 
         p = Path(settings.image_dir_save)
@@ -47,7 +49,7 @@ class TestImageDataset(Dataset):
     def __init__(self, dataset_dir):
         self.hr_transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize(settings.mean, settings.std),
+            transforms.Normalize(opt.mean, opt.std),
             ])
         p = Path(dataset_dir)
         self.files = sorted(p.glob('*'))
@@ -59,7 +61,7 @@ class TestImageDataset(Dataset):
         self.__lr_transform = transforms.Compose([
             transforms.Resize((img_height // 4, img_width // 4), Image.BICUBIC),
             transforms.ToTensor(),
-            transforms.Normalize(settings.mean, settings.std),
+            transforms.Normalize(opt.mean, opt.std),
             ])
         img = self.__lr_transform(img)
         return img

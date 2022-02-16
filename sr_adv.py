@@ -17,7 +17,15 @@ import set_e
 settings = set_e.Settings()
 
 # ----- main
+def denormalize(t):
+    for i in range(3):
+        t[:, i].mul_(opt.std[i]).add_(opt.mean[i])
+    return torch.clamp(t, 0, 255)
+
+generator = GeneratorRRDB(opt.channels, filters=64, num_res_blocks=opt.residual_blocks).to(opt.device)
+generator.load_state_dict(torch.load(generator_weight_path))
 Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
+
 with torch.no_grad():
     for i, imgs in enumerate(demo_dataloader):
         imgs_lr = Variable(imgs['lr'].type(Tensor))
