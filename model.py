@@ -1,5 +1,10 @@
 '''
     SR_ADV | model.py
+
+-----
+    memo
+
+    https://qiita.com/sugulu_Ogawa_ISID/items/62f5f7adee083d96a587
 '''
 
 # ----- module
@@ -167,8 +172,12 @@ class MODEL():
         imgs_lr = Variable(imgs['lr'].type(self.Tensor))
         imgs_hr = Variable(imgs['hr'].type(self.Tensor))
 
-        valid = Variable(self.Tensor(np.ones((imgs_lr.size(0), *self.discriminator.output_shape))), requires_grad=False)
-        fake = Variable(self.Tensor(np.zeros((imgs_lr.size(0), *self.discriminator.output_shape))), requires_grad=False)
+        valid = Variable(self.Tensor(
+            np.ones((imgs_lr.size(0), *self.discriminator.output_shape))),
+            requires_grad=False)
+        fake = Variable(self.Tensor(
+            np.zeros((imgs_lr.size(0), *self.discriminator.output_shape))),
+            requires_grad=False)
 
         self.optimizer_G.zero_grad()
 
@@ -188,8 +197,12 @@ class MODEL():
         imgs_lr = Variable(imgs['lr'].type(self.Tensor))
         imgs_hr = Variable(imgs['hr'].type(self.Tensor))
 
-        valid = Variable(self.Tensor(np.ones((imgs_lr.size(0), *self.discriminator.output_shape))), requires_grad=False)
-        fake = Variable(self.Tensor(np.zeros((imgs_lr.size(0), *self.discriminator.output_shape))), requires_grad=False)
+        valid = Variable(self.Tensor(
+            np.ones((imgs_lr.size(0), *self.discriminator.output_shape))),
+            requires_grad=False)
+        fake = Variable(self.Tensor(
+            np.zeros((imgs_lr.size(0), *self.discriminator.output_shape))),
+            requires_grad=False)
 
         self.optimizer_G.zero_grad()
 
@@ -201,8 +214,8 @@ class MODEL():
         pred_fake = self.discriminator(gen_hr)
 
         # adversarial loss
-        loss_GAN = self.criterion_GAN(
-            pred_fake - pred_real.mean(0, keepdim=True), valid)
+        print(f'pred_fake : {pred_fake.size()}\npred_real : {pred_real.size()}')
+        loss_GAN = self.criterion_GAN(pred_fake - pred_real.mean(0, keepdim=True), valid)
 
         # perceptual loss
         gen_feature = self.feature_extractor(gen_hr)
@@ -220,10 +233,8 @@ class MODEL():
         pred_fake = self.discriminator(gen_hr.detach())
 
         # adversarial loss
-        loss_real = self.criterion_GAN(
-            pred_real - pred_fake.mean(0, keepdim=True), valid)
-        loss_fake = self.criterion_GAN(
-            pred_fake - pred_real.mean(0, keepdim=True), fake)
+        loss_real = self.criterion_GAN(pred_real - pred_fake.mean(0, keepdim=True), valid)
+        loss_fake = self.criterion_GAN(pred_fake - pred_real.mean(0, keepdim=True), fake)
 
         loss_D = (loss_real+loss_fake)/2
         loss_D.backward()

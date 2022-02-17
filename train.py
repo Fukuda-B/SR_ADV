@@ -11,6 +11,7 @@
 '''
 
 # ----- module
+import os
 import torch
 import numpy as np
 import train_set
@@ -24,11 +25,13 @@ settings = set_e.Settings()
 class Param:
     def __init__(self):
         self.n_epoch = 50
-        self.batch_size = 16
-        self.warmup_batches = 500
+        # self.batch_size = 16
+        self.batch_size = 8
+        # self.warmup_batches = 500
+        self.warmup_batches = 5
         self.sample_interval = 100
         self.checkpoint_interval = 1000
-        self.num_workers = 8
+        self.num_workers = os.cpu_count()
         self.hr_height = 128
         self.hr_width = 128
         self.hr_shape = (self.hr_height, self.hr_width)
@@ -51,20 +54,20 @@ if __name__ == '__main__':
         train_set.ImageDataset(
             settings.image_dir_save,
             opt.hr_shape,
-            num_workers=opt.num_workers,
         ),
         batch_size=opt.batch_size,
         shuffle=True,
-        num_workers=opt.n_cpu,
+        num_workers=opt.num_workers,
+        pin_memory=True,
     )
     test_dataloader = DataLoader(
         train_set.TestImageDataset(
             settings.image_dir_test,
-            num_workers=opt.num_workers,
         ),
         batch_size=1,
         shuffle=False,
-        num_workers=opt.n_cpu,
+        num_workers=opt.num_workers,
+        pin_memory=True,
     )
 
     for epoch in range(1, opt.n_epoch+1):
