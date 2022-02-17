@@ -4,6 +4,7 @@
 -----
     memo
 
+    https://pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html
     https://qiita.com/sugulu_Ogawa_ISID/items/62f5f7adee083d96a587
 '''
 
@@ -108,7 +109,7 @@ class FeatureExtractor(nn.Module):
             vgg19_model.features.children())[:35])
 
     def forward(self, img):
-        return self.vgg19_54
+        return self.vgg19_54(img)
 
 # ----- Discriminator
 class Discriminator(nn.Module):
@@ -134,9 +135,9 @@ class Discriminator(nn.Module):
         layers = []
         in_filters = in_channels
         for i, out_filters in enumerate([64, 128, 256, 512]):
-            print(discriminator_block(in_filters, out_filters, first_block=(i==0)))
-        layers.extend(discriminator_block(in_filters, out_filters, first_block=(i==0)))
-        in_filters = out_filters
+            # print(discriminator_block(in_filters, out_filters, first_block=(i==0)))
+            layers.extend(discriminator_block(in_filters, out_filters, first_block=(i==0)))
+            in_filters = out_filters
 
         layers.append(nn.Conv2d(out_filters, 1, kernel_size=3, stride=1, padding=1))
         self.model = nn.Sequential(*layers)
@@ -214,7 +215,10 @@ class MODEL():
         pred_fake = self.discriminator(gen_hr)
 
         # adversarial loss
-        print(f'pred_fake : {pred_fake.size()}\npred_real : {pred_real.size()}')
+
+        # print(f'\npred_fake : {pred_fake.size()}\npred_real : {pred_real.size()}')
+        # print(f'pred_real mean : {pred_real.mean(0, keepdim=True).size()}')
+        # print(f'valid : {valid.size()}')
         loss_GAN = self.criterion_GAN(pred_fake - pred_real.mean(0, keepdim=True), valid)
 
         # perceptual loss
@@ -244,7 +248,7 @@ class MODEL():
             'epoch': epoch, 'batch_num': batch_num,
             'loss_D': loss_D.item(), 'loss_G': loss_G.item(),
             'loss_content': loss_content.item(),
-            'loss_GAN': loss_GAN(),
+            'loss_GAN': loss_GAN.item(),
             'loss_pixel': loss_pixel.item(),}
 
         if batch_num == 1:
@@ -265,7 +269,7 @@ class MODEL():
         for k, v in train_info.items():
             self.writer.add_scalar(k, v, batches_done)
 
-    def save_image(self, imgs, batches_done, i, opt):
+    def save_tmp_image(self, imgs, batches_done, i, opt):
         with torch.no_grad():
             imgs_lr = Variable(imgs['lr'].type(self.Tensor))
             gen_hr = self.generator(imgs_lr)
@@ -274,7 +278,9 @@ class MODEL():
 
             image_batch_proc_dir = Path(settings.image_dir_proc).joinpath('{:05}'.format(i))
             os.makedirs(image_batch_proc_dir, exist_ok=True)
-            save_image(gen_hr, Path(image_batch_proc_dir, '{:09}.{}'.format(batches_done, settings.test_img_format)), nrow=1, normalize=False)
+            image_n = '{:09}.{}'.format(batches_done, settings.test_img_format)
+            # save_image(gen_hr, Path(image_batch_proc_dir, image_n), nrow=1, normalize=False)
+            save_image(gen_hr, Path(image_batch_proc_dir, image_n), normalize=False)
 
     def save_weight(self, batches_done):
         generator_weight_path = Path(settings.weight_dir_save).joinpath('generator_{:08}.pth'.format(batches_done))

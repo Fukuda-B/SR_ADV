@@ -12,6 +12,7 @@
 
 # ----- module
 import os
+import datetime
 import torch
 import numpy as np
 import train_set
@@ -27,8 +28,8 @@ class Param:
         self.n_epoch = 50
         # self.batch_size = 16
         self.batch_size = 8
-        # self.warmup_batches = 500
-        self.warmup_batches = 5
+        self.warmup_batches = 500
+        # self.warmup_batches = 5
         self.sample_interval = 100
         self.checkpoint_interval = 1000
         self.num_workers = os.cpu_count()
@@ -70,6 +71,7 @@ if __name__ == '__main__':
         pin_memory=True,
     )
 
+    print(f'start : {datetime.datetime.now()}')
     for epoch in range(1, opt.n_epoch+1):
         for batch_num, imgs in enumerate(train_dataloader):
             batches_done=(epoch-1)*len(train_dataloader)+batch_num
@@ -82,8 +84,9 @@ if __name__ == '__main__':
             # save sample
             if batches_done%opt.sample_interval==0:
                 for i, imgs in enumerate(test_dataloader):
-                    gan.save_image(imgs, batches_done, i, opt)
+                    gan.save_tmp_image(imgs, batches_done, i, opt)
 
             # save weight
             if batches_done%opt.checkpoint_interval==0:
                 gan.save_weight(batches_done)
+    print(f'end : {datetime.datetime.now()}')
