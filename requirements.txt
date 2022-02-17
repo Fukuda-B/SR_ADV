@@ -4,4 +4,3 @@ pathlib
 tqdm
 torch
 torchvision
-chainer

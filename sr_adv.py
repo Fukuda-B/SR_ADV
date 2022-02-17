@@ -19,7 +19,7 @@ import train
 opt = train.Param()
 
 # ----- main
-generator_weight_path = ''
+generator_weight_path = 'G:/IMG_Dataset/weight/generator_00001000_pre.pth'
 
 def denormalize(t):
     for i in range(3):

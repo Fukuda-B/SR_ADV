@@ -2,6 +2,11 @@
     SR_ADV | train_set.py
 
     image set
+
+-----
+    memo
+
+    https://chowdera.com/2021/12/202112300421271916.html
 '''
 
 # ----- module
@@ -9,6 +14,7 @@ from pathlib import Path
 from torchvision import transforms
 from torch.utils.data import Dataset
 from PIL import Image
+from torchvision.transforms import InterpolationMode
 
 # ----- config
 import set_e
@@ -22,13 +28,13 @@ class ImageDataset(Dataset):
         hr_height, hr_width = hr_shape
 
         self.lr_transform = transforms.Compose([
-            transforms.Resize((hr_height // 4, hr_height // 4), Image.BICUBIC),
+            transforms.Resize((hr_height // 4, hr_height // 4), interpolation=InterpolationMode.BICUBIC),
             transforms.ToTensor(),
             transforms.Normalize(opt.mean, opt.std),
             ])
 
         self.hr_transform = transforms.Compose([
-            transforms.Resize((hr_height, hr_height), Image.BICUBIC),
+            transforms.Resize((hr_height, hr_height), interpolation=InterpolationMode.BICUBIC),
             transforms.ToTensor(),
             transforms.Normalize(opt.mean, opt.std),
             ])
@@ -59,7 +65,7 @@ class TestImageDataset(Dataset):
         img_width, img_height = img_size
 
         self.__lr_transform = transforms.Compose([
-            transforms.Resize((img_height // 4, img_width // 4), Image.BICUBIC),
+            transforms.Resize((img_height // 4, img_width // 4), interpolation=InterpolationMode.BICUBIC),
             transforms.ToTensor(),
             transforms.Normalize(opt.mean, opt.std),
             ])
