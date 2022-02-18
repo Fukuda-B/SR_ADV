@@ -24,6 +24,8 @@ from torchvision.utils import save_image
 # ----- config
 import set_e
 settings = set_e.Settings()
+torch.manual_seed(settings.seed)
+torch.cuda.manual_seed_all(settings.seed)
 
 # ----- Generator
 class DenseResidualBlock(nn.Module):
@@ -171,6 +173,13 @@ class MODEL():
         '''
         imgs_lr = Variable(imgs['lr'].type(self.Tensor))
         imgs_hr = Variable(imgs['hr'].type(self.Tensor))
+
+        valid = Variable(self.Tensor(
+            np.ones((imgs_lr.size(0), *self.discriminator.output_shape))),
+            requires_grad=False)
+        fake = Variable(self.Tensor(
+            np.zeros((imgs_lr.size(0), *self.discriminator.output_shape))),
+            requires_grad=False)
 
         self.optimizer_G.zero_grad()
         gen_hr = self.generator(imgs_lr)

@@ -18,6 +18,8 @@ from torchvision.utils import save_image
 import model
 import set_e
 settings = set_e.Settings()
+torch.manual_seed(settings.seed)
+torch.cuda.manual_seed_all(settings.seed)
 import train
 opt = train.Param()
 

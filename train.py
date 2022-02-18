@@ -23,6 +23,8 @@ import gc
 # ----- config
 import set_e
 settings = set_e.Settings()
+torch.manual_seed(settings.seed)
+torch.cuda.manual_seed_all(settings.seed)
 
 class Param:
     def __init__(self):
@@ -51,8 +53,8 @@ class Param:
 
 # ----- main
 if __name__ == '__main__':
-    gc.collect()
-    torch.cuda.empty_cache()
+    # gc.collect()
+    # torch.cuda.empty_cache()
 
     opt = Param()
     gan = model.MODEL(opt)
