@@ -1,6 +1,0 @@
-reference
-毛利拓也, 大政孝充, もちまる, 嶋田宏樹, むぎたろう, 大郷友海, 寅蔵, GANディープラーニング実装ハンドブック, 秀和システム, 2021/2
-https://github.com/aladdinpersson/Machine-Learning-Collection
-
-SR3?
-https://github.com/Janspiry/Image-Super-Resolution-via-Iterative-Refinement
