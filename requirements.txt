@@ -4,3 +4,4 @@ pathlib
 tqdm
 torch
 torchvision
+tensorboad

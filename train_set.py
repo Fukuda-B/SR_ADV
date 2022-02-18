@@ -29,6 +29,7 @@ class ImageDataset(Dataset):
 
         self.lr_transform = transforms.Compose([
             transforms.Resize((hr_height // 4, hr_height // 4), interpolation=InterpolationMode.BICUBIC),
+            transforms.RandomHorizontalFlip(opt.random_flip),
             transforms.ToTensor(),
             transforms.Normalize(opt.mean, opt.std),
             ])

@@ -18,6 +18,7 @@ import numpy as np
 import train_set
 import model
 from torch.utils.data import DataLoader
+import gc
 
 # ----- config
 import set_e
@@ -46,9 +47,13 @@ class Param:
         self.device = 'cuda' if torch.cuda.is_available else 'cpu'
         self.mean = np.array([0.485, 0.456, 0.406])
         self.std = np.array([0.229, 0.224, 0.225])
+        self.random_flip = 0.3
 
 # ----- main
 if __name__ == '__main__':
+    gc.collect()
+    torch.cuda.empty_cache()
+
     opt = Param()
     gan = model.MODEL(opt)
     train_dataloader = DataLoader(
