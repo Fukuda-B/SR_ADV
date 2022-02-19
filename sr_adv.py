@@ -12,6 +12,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from train_set import TestImageDataset
+# from train_set import AsImageDataset as TestImageDataset # input without shrinking
 from torchvision.utils import save_image
 
 # ----- config
@@ -24,7 +25,7 @@ import train
 opt = train.Param()
 
 # ----- main
-generator_weight_path = 'G:/IMG_Dataset/weight/generator_00008000.pth'
+generator_weight_path = 'G:/IMG_Dataset/weight/generator_00014000.pth'
 
 def denormalize(t):
     for i in range(3):

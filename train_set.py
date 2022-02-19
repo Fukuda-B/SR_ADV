@@ -10,6 +10,7 @@
 '''
 
 # ----- module
+import os
 from pathlib import Path
 from torchvision import transforms
 from torch.utils.data import Dataset
@@ -52,6 +53,35 @@ class ImageDataset(Dataset):
 
     def __len__(self): return len(self.files)
 
+class AsImageDataset(Dataset):
+    def __init__(self, dataset_dir):
+        self.hr_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(opt.mean, opt.std),
+            ])
+        p = Path(dataset_dir)
+        self.files = sorted([i for i in p.glob('*') if os.path.isfile(i)])
+
+    def lr_transform(self, img, img_size):
+        img_width, img_height = img_size
+
+        self.__lr_transform = transforms.Compose([
+            transforms.Resize((img_height, img_width), interpolation=InterpolationMode.BICUBIC),
+            transforms.ToTensor(),
+            transforms.Normalize(opt.mean, opt.std),
+            ])
+        img = self.__lr_transform(img)
+        return img
+
+    def __getitem__(self, index):
+        img = Image.open(self.files[index%len(self.files)])
+        img_size = img.size
+        img_lr = self.lr_transform(img, img_size)
+        img_hr = self.hr_transform(img)
+        return {'lr': img_lr, 'hr': img_hr}
+
+    def __len__(self): return len(self.files)
+
 class TestImageDataset(Dataset):
     def __init__(self, dataset_dir):
         self.hr_transform = transforms.Compose([
@@ -59,7 +89,8 @@ class TestImageDataset(Dataset):
             transforms.Normalize(opt.mean, opt.std),
             ])
         p = Path(dataset_dir)
-        self.files = sorted(p.glob('*'))
+        self.files = sorted([i for i in p.glob('*') if os.path.isfile(i)])
+        # self.files = sorted(p.glob('*'))
         # self.files = sorted(glob(Path(dataset_dir).joinpath('*')))
 
     def lr_transform(self, img, img_size):
