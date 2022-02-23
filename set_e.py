@@ -13,7 +13,8 @@ class Settings:
         self.image_dir_save = 'G:/IMG_Dataset/crop' # cropped image & train image
         self.load_img_format = 'png'
         self.save_img_format = 'jpg'
-        self.random_crop_cnt = 3  # Number of times to crop from a single image
+        # self.random_crop_cnt = 3  # Number of times to crop from a single image
+        self.random_crop_cnt = 6  # Number of times to crop from a single image
         self.crop_size = (128, 128)
 
         # train

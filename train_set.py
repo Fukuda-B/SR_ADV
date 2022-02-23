@@ -24,7 +24,7 @@ import set_e
 settings = set_e.Settings()
 import train
 opt = train.Param()
-random.seed(seed=settings.seed)
+random.seed(settings.seed)
 torch.manual_seed(seed=settings.seed)
 torch.cuda.manual_seed_all(settings.seed)
 
