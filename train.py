@@ -50,7 +50,7 @@ class Param:
         self.mean = np.array([0.485, 0.456, 0.406])
         self.std = np.array([0.229, 0.224, 0.225])
         self.random_flip = 0.3
-        self.random_blur_sigma = (0.001, 3.0)
+        self.random_blur_sigma = (0.1, 2.0)
         self.random_blur_kernel = 5
 
 load_gen_model_name = False # 読み込む重みが保存されたファイルの名前 (generator)
