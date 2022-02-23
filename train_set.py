@@ -12,7 +12,9 @@
 # ----- module
 import os
 from pathlib import Path
+import random
 from torchvision import transforms
+import torch
 from torch.utils.data import Dataset
 from PIL import Image
 from torchvision.transforms import InterpolationMode
@@ -22,6 +24,9 @@ import set_e
 settings = set_e.Settings()
 import train
 opt = train.Param()
+random.seed(seed=settings.seed)
+torch.manual_seed(seed=settings.seed)
+torch.cuda.manual_seed_all(settings.seed)
 
 # ----- data load
 class ImageDataset(Dataset):
@@ -31,6 +36,7 @@ class ImageDataset(Dataset):
         self.lr_transform = transforms.Compose([
             transforms.Resize((hr_height // 4, hr_height // 4), interpolation=InterpolationMode.BICUBIC),
             transforms.RandomHorizontalFlip(opt.random_flip),
+            transforms.GaussianBlur(kernel_size=opt.random_blur_kernel, sigma=opt.random_blur_sigma),
             transforms.ToTensor(),
             transforms.Normalize(opt.mean, opt.std),
             ])

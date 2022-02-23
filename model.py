@@ -61,7 +61,7 @@ class ResidualInResidualDenseBlock(nn.Module):
             DenseResidualBlock(filters),
             DenseResidualBlock(filters)
         )
-    
+
     def forward(self, x):
         return self.dense_blocks(x).mul(self.res_scale) + x
 
@@ -162,8 +162,8 @@ class MODEL():
         self.criterion_content = nn.L1Loss().to(opt.device)
         self.criterion_pixel = nn.L1Loss().to(opt.device)
 
-        self.optimizer_G = optim.Adam(self.generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
-        self.optimizer_D = optim.Adam(self.discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+        self.optimizer_G = optim.RAdam(self.generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+        self.optimizer_D = optim.RAdam(self.discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
         self.Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.Tensor
         self.writer = SummaryWriter(log_dir=settings.log_dir)
 

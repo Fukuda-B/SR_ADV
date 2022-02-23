@@ -50,6 +50,11 @@ class Param:
         self.mean = np.array([0.485, 0.456, 0.406])
         self.std = np.array([0.229, 0.224, 0.225])
         self.random_flip = 0.3
+        self.random_blur_sigma = (0, 3.0)
+        self.random_blur_kernel_size = 5
+
+load_gen_model_name = False # 読み込む重みが保存されたファイルの名前 (generator)
+load_dis_model_name = False # (discriminator)
 
 # ----- main
 if __name__ == '__main__':
@@ -78,9 +83,27 @@ if __name__ == '__main__':
         pin_memory=True,
     )
 
+    if load_gen_model_name and load_dis_model_name: # 学習済み重みを読み込む場合
+        discriminator = model.Discriminator()
+        load_gen_model = torch.load(load_gen_model_name)
+        load_dis_model = torch.load(load_dis_model_name)
+        model.generator.load_state_dict(load_gen_model)
+        model.discriminator.load_state_dict(load_dis_model)
+
+        load_batch_num = int(load_gen_model_name[len(load_gen_model_name)-12:][:8])
+        print(f'load batches_num : {load_batch_num}')
+
+        start_epoch = load_batch_num//len(train_dataloader)
+        start_batch = load_batch_num%len(train_dataloader)
+
+    else: start_epoch = 1
+
     print(f'start : {datetime.datetime.now()}')
-    for epoch in range(1, opt.n_epoch+1):
+    for epoch in range(start_epoch, opt.n_epoch+1):
         for batch_num, imgs in enumerate(train_dataloader):
+            if load_gen_model_name and epoch==start_epoch and batch_num<=start_batch:
+                continue
+
             batches_done=(epoch-1)*len(train_dataloader)+batch_num
 
             if batches_done <= opt.warmup_batches:
