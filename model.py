@@ -283,6 +283,7 @@ class MODEL():
             save_image(gen_hr, Path(image_batch_proc_dir, image_n), normalize=False)
 
     def save_weight(self, batches_done):
+        os.makedirs(settings.weight_dir_save, exist_ok=True)
         generator_weight_path = Path(settings.weight_dir_save).joinpath('generator_{:08}.pth'.format(batches_done))
         discriminator_weight_path = Path(settings.weight_dir_save).joinpath(('discriminator_{:08}.pth'.format(batches_done)))
         torch.save(self.generator.state_dict(), generator_weight_path)

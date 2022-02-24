@@ -36,7 +36,7 @@ class ImageDataset(Dataset):
         self.lr_transform = transforms.Compose([
             transforms.Resize((hr_height // 4, hr_height // 4), interpolation=InterpolationMode.BICUBIC),
             transforms.RandomHorizontalFlip(opt.random_flip),
-            # transforms.GaussianBlur(kernel_size=opt.random_blur_kernel, sigma=opt.random_blur_sigma),
+            transforms.GaussianBlur(kernel_size=opt.random_blur_kernel, sigma=opt.random_blur_sigma),
             transforms.ToTensor(),
             transforms.Normalize(opt.mean, opt.std),
             ])

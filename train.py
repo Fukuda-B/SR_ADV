@@ -119,4 +119,4 @@ if __name__ == '__main__':
             # save weight
             if batches_done%opt.checkpoint_interval==0:
                 gan.save_weight(batches_done)
-    print(f'end : {datetime.datetime.now()}')
+    print(f'\nend : {datetime.datetime.now()}')
