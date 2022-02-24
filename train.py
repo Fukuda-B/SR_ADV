@@ -29,8 +29,8 @@ torch.cuda.manual_seed_all(settings.seed)
 class Param:
     def __init__(self):
         self.n_epoch = 50
-        # self.batch_size = 16
-        self.batch_size = 8
+        self.batch_size = 16
+        # self.batch_size = 8
         self.warmup_batches = 500
         # self.warmup_batches = 5
         self.sample_interval = 100
@@ -51,7 +51,7 @@ class Param:
         self.std = np.array([0.229, 0.224, 0.225])
         self.random_flip = 0.3
         self.random_blur_sigma = (0.1, 2.0)
-        self.random_blur_kernel = 5
+        self.random_blur_kernel = 3
 
 load_gen_model_name = False # 読み込む重みが保存されたファイルの名前 (generator)
 load_dis_model_name = False # (discriminator)
