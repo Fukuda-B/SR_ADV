@@ -27,7 +27,7 @@ opt = train.Param()
 # ----- main
 # generator_weight_path = 'G:/IMG_Dataset/weight/generator_00014000.pth'
 # generator_weight_path = 'G:/IMG_Dataset_/weight/generator_00008000.pth'
-generator_weight_path = 'G:/IMG_Dataset/tmp/output/kaggle/working/weight/generator_00014000.pth'
+generator_weight_path = 'G:/IMG_Dataset/tmp/output/kaggle/working/weight/generator_00028000.pth'
 
 def denormalize(t):
     for i in range(3):

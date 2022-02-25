@@ -7,9 +7,11 @@
 # ----- config
 class Settings:
     def __init__(self):
-        host_dir = 'G:/IMG_Dataset'
+        # host_dir = 'G:/IMG_Dataset'
+        host_dir = 'G:/IMG_Dataset_gen'
         # host_dir = '/content/drive/My Drive/SR_ADV/2022_2_24_4'
         # host_dir = '../img-dataset'
+        # host_dir = '../img-dataset-gen'
 
         save_dir = host_dir
         # save_dir = '../../working'
