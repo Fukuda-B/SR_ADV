@@ -17,6 +17,7 @@ import torch
 import numpy as np
 import train_set
 import model
+# import model_deepspeed as model # if use deepspeed
 from torch.utils.data import DataLoader
 import gc
 
@@ -94,10 +95,10 @@ if __name__ == '__main__':
         # del load_dis_model
 
         load_batch_num = int(load_gen_model_name[len(load_gen_model_name)-12:][:8])
-        print(f'load batches_num : {load_batch_num}')
 
         start_epoch = load_batch_num//len(train_dataloader)
         start_batch = load_batch_num%len(train_dataloader)
+        print(f'load batches_num : {load_batch_num}, start_epoch : {start_epoch}, start_batch : {start_batch}')
 
     else: start_epoch = 1
 

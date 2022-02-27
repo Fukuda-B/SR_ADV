@@ -7,8 +7,8 @@
 # ----- config
 class Settings:
     def __init__(self):
-        # host_dir = 'G:/IMG_Dataset'
-        host_dir = 'G:/IMG_Dataset_gen'
+        host_dir = 'G:/IMG_Dataset'
+        # host_dir = 'G:/IMG_Dataset_gen'
         # host_dir = '/content/drive/My Drive/SR_ADV/2022_2_24_4'
         # host_dir = '../img-dataset'
         # host_dir = '../img-dataset-gen'
@@ -23,7 +23,8 @@ class Settings:
         self.load_img_format = 'png'
         self.save_img_format = 'jpg'
         # self.random_crop_cnt = 3  # Number of times to crop from a single image
-        self.random_crop_cnt = 6  # Number of times to crop from a single image
+        # self.random_crop_cnt = 6  # Number of times to crop from a single image
+        self.random_crop_cnt = 7  # Number of times to crop from a single image
         self.crop_size = (128, 128)
 
         # train

@@ -10,5 +10,13 @@ The weights are saved in the directory [set_e.Settings.weight_dir_save](https://
 (Settings.image_dir_demo directory if you want to check the learned weights.)  
 When the training is complete, set the variable ([generator_weight_path](https://github.com/Fukuda-B/SR_ADV/blob/226ce008ef2f0d884c5c55f7acf2726af8dfa68a/sr_adv.py#L27)) to the name of the file where the weights are saved in and run `sr_adv.py`.  
 
+---
 
-
+`make_d.py` : Make croped images  
+`train_set.py` : Dataset  
+`set_e.py` : Settings (directory)  
+`train.py` : Option (training) / Training  
+`model.py` : GAN model  
+`sr_adv.py` : Generate images using trained weight  
+  
+`model_deepspeed.py` : GAN model (use deepspeed)  
