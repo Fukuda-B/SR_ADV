@@ -12,22 +12,21 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from train_set import TestImageDataset
-from train_set import AsImageDataset as TestImageDataset # input without shrinking
+# from train_set import AsImageDataset as TestImageDataset # input without shrinking
 from torchvision.utils import save_image
 
 # ----- config
 import model
 import set_e
 settings = set_e.Settings()
+opt = set_e.Param()
 torch.manual_seed(settings.seed)
 torch.cuda.manual_seed_all(settings.seed)
-import train
-opt = train.Param()
 
 # ----- main
 # generator_weight_path = 'G:/IMG_Dataset/weight/generator_00014000.pth'
 # generator_weight_path = 'G:/IMG_Dataset_/weight/generator_00008000.pth'
-generator_weight_path = 'G:/IMG_Dataset_/tmp/weight/generator_00044000.pth'
+generator_weight_path = 'D:/IMG_Dataset_val/tmp/generator_00052000.pth'
 
 def denormalize(t):
     for i in range(3):

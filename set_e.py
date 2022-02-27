@@ -4,7 +4,12 @@
     environmental settings
 '''
 
-# ----- config
+# ----- module
+import os
+import torch
+import numpy as np
+
+# ----- settings
 class Settings:
     def __init__(self):
         host_dir = 'G:/IMG_Dataset'
@@ -35,3 +40,34 @@ class Settings:
         self.image_dir_proc = f'{save_dir}/proc' # save temp image dir
         self.weight_dir_save =  f'{save_dir}/weight' # save weight dir
         self.log_dir = f'{save_dir}/logs' # save logs dir
+
+# ----- opt
+class Param:
+    def __init__(self):
+        self.n_epoch = 50
+        # self.n_epoch = 100
+        self.batch_size = 16
+        # self.batch_size = 8
+        self.warmup_batches = 500
+        # self.warmup_batches = 5
+        self.sample_interval = 100
+        self.checkpoint_interval = 1000
+        self.num_workers = os.cpu_count()
+        self.hr_height = 128
+        self.hr_width = 128
+        self.hr_shape = (self.hr_height, self.hr_width)
+        self.channels = 3
+        self.residual_blocks = 23
+        self.lr = 0.0002
+        self.b1 = 0.9
+        self.b2 = 0.999
+        self.lambda_adv = 5.00E-03
+        self.lambda_pixel = 1.00E-02
+        self.device = 'cuda' if torch.cuda.is_available else 'cpu'
+        self.mean = np.array([0.485, 0.456, 0.406])
+        self.std = np.array([0.229, 0.224, 0.225])
+        self.random_flip = 0.3
+        self.random_blur_p = 0.3
+        self.random_jpg_noise_p = 0.5
+        self.random_jpg_noise_quality = (0, 30)
+

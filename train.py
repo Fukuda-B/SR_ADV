@@ -24,43 +24,18 @@ import gc
 # ----- config
 import set_e
 settings = set_e.Settings()
+opt = set_e.Param()
+
 torch.manual_seed(settings.seed)
 torch.cuda.manual_seed_all(settings.seed)
 
-class Param:
-    def __init__(self):
-        # self.n_epoch = 50
-        self.n_epoch = 100
-        self.batch_size = 16
-        # self.batch_size = 8
-        self.warmup_batches = 500
-        # self.warmup_batches = 5
-        self.sample_interval = 100
-        self.checkpoint_interval = 1000
-        self.num_workers = os.cpu_count()
-        self.hr_height = 128
-        self.hr_width = 128
-        self.hr_shape = (self.hr_height, self.hr_width)
-        self.channels = 3
-        self.residual_blocks = 23
-        self.lr = 0.0002
-        self.b1 = 0.9
-        self.b2 = 0.999
-        self.lambda_adv = 5.00E-03
-        self.lambda_pixel = 1.00E-02
-        self.device = 'cuda' if torch.cuda.is_available else 'cpu'
-        self.mean = np.array([0.485, 0.456, 0.406])
-        self.std = np.array([0.229, 0.224, 0.225])
-        self.random_flip = 0.3
-        self.random_blur_sigma = (0.1, 2.0)
-        self.random_blur_kernel = 3
-
-load_gen_model_name = 'G:/IMG_Dataset_gen/generator_00014000.pth' # 読み込む重みが保存されたファイルの名前 (generator)
-load_dis_model_name = 'G:/IMG_Dataset_gen/discriminator_00014000.pth' # (discriminator)
+load_gen_model_name = False
+load_dis_model_name = False
+# load_gen_model_name = 'G:/IMG_Dataset_gen/generator_00014000.pth' # 読み込む重みが保存されたファイルの名前 (generator)
+# load_dis_model_name = 'G:/IMG_Dataset_gen/discriminator_00014000.pth' # (discriminator)
 
 # ----- main
 if __name__ == '__main__':
-    opt = Param()
     gan = model.MODEL(opt)
     train_dataloader = DataLoader(
         train_set.ImageDataset(

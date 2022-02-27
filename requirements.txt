@@ -6,3 +6,4 @@ torch
 torchvision
 tensorboad
 deepspeed
+albumentations
