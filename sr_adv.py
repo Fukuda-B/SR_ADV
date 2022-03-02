@@ -11,8 +11,8 @@ from pathlib import Path
 from torch import nn
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
-from train_set import TestImageDataset
-# from train_set import AsImageDataset as TestImageDataset # input without shrinking
+# from train_set import TestImageDataset
+from train_set import AsImageDataset as TestImageDataset # input without shrinking
 from torchvision.utils import save_image
 
 # ----- config
@@ -26,7 +26,7 @@ torch.cuda.manual_seed_all(settings.seed)
 # ----- main
 # generator_weight_path = 'G:/IMG_Dataset/weight/generator_00014000.pth'
 # generator_weight_path = 'G:/IMG_Dataset_/weight/generator_00008000.pth'
-generator_weight_path = 'D:/IMG_Dataset_val/tmp/generator_00052000.pth'
+generator_weight_path = 'D:/IMG_Dataset_val/tmp2/weight/generator_00059000.pth'
 
 def denormalize(t):
     for i in range(3):
