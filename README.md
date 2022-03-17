@@ -24,5 +24,6 @@ When the training is complete, set the variable ([generator_weight_path](https:/
 ---
 ### Output Example
 ![Output Example](./img/img0.png)  
-  
+ｸﾚｰﾁｬﾝ
+    
 Originally, we wanted to show an example of the output with an image of an adventure game, but due to copyright issues...
